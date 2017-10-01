@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+	<edmx:Reference Uri="./com.sap.vocabularies.Common.v1.xml">
+		<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="./com.sap.vocabularies.UI.v1.xml">
+		<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="./com.sap.vocabularies.Communication.v1.xml">
+		<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+	</edmx:Reference>
+	<edmx:Reference Uri="../../../sap/sepmra_prod_man/$metadata">
+		<edmx:Include Namespace="SEPMRA_OVW" Alias="SEPMRA_OVW"/>
+	</edmx:Reference>
+	<edmx:DataServices>
+		<Schema Namespace="sepmra_ovw_anno_mdl.v1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<!-- ==============================================================================================
+				Approve Purchase Orders
+				
+				Cards: 'Awaiting Approval' (stacked)
+			=============================================================================================== -->
+			<Annotations Target="SEPMRA_OVW.SEPMRA_C_OVW_POApproveType">
+				<Annotation Term="UI.Facets">
+					<Collection>
+						<Record Type="UI.ReferenceFacet">
+							<PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup"/>
+							<Annotation Term="UI.IsSummary"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant">
+					<Record>
+						<PropertyValue Property="PresentationVariant" Path="@UI.PresentationVariant#Default"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.PresentationVariant" Qualifier="Default">
+					<Record>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="CreationDateTime"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="PurchaseOrder"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Identification">
+					<Collection>
+						<Record Type="UI.DataFieldForIntentBasedNavigation">
+							<PropertyValue Property="SemanticObject" String="EPMPurchaseOrder"/>
+							<PropertyValue Property="Action" String="approve"/>
+							<PropertyValue Property="RequiresContext" Bool="false"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="{@i18n>@ApproveActionLabel}"/>
+							<PropertyValue Property="Action" String="SEPMRA_OVW.SEPMRA_OVW_Entities/SEPMRA_C_OVW_POApproveApprove"/>
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+						</Record>
+						<Record Type="UI.DataFieldForAction">
+							<PropertyValue Property="Label" String="{@i18n>@RejectActionLabel}"/>
+							<PropertyValue Property="Action" String="SEPMRA_OVW.SEPMRA_OVW_Entities/SEPMRA_C_OVW_POApproveReject"/>
+							<PropertyValue Property="InvocationGrouping" EnumMember="UI.OperationGroupingType/Isolated"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+						</Record>
+					</Collection>
+				</Annotation>
+			</Annotations>
+			<!-- ==============================================================================================
+				Sales per Supplier
+				
+				Cards: 'Revenue by Supplier' (Bubble Chart)
+					   'Top 4 Suppliers' (Donut Chart)
+			=============================================================================================== -->
+			<Annotations Target="SEPMRA_OVW.SEPMRA_C_OVW_SalesPerSupplierType">
+				<Annotation Term="UI.DataPoint" Qualifier="GrossAmountInCompanyCurrency">
+					<Record>
+						<PropertyValue Property="Value" Path="GrossAmountInCompanyCurrency"/>
+						<PropertyValue Property="ValueFormat">
+							<Record>
+								<PropertyValue Property="ScaleFactor" Decimal="1000"/>
+								<PropertyValue Property="NumberOfFractionalDigits" Int="3"/>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Chart" Qualifier="bubble">
+					<Record Type="UI.ChartDefinitionType">
+						<PropertyValue Property="Title" String="{@i18n>@RevenueBySupplierChartTitle}"/>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Bubble"/>
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Supplier</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="DimensionAttributes">
+							<Collection>
+								<Record Type="UI.ChartDimensionAttributeType">
+									<PropertyValue Property="Dimension" PropertyPath="Supplier"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Series"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>GrossAmountInCompanyCurrency</PropertyPath>
+								<PropertyPath>NetUnitPriceInCompanyCurrency</PropertyPath>
+								<PropertyPath>Quantity</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="GrossAmountInCompanyCurrency"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis3"/>
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#GrossAmountInCompanyCurrency"/>
+								</Record>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="NetUnitPriceInCompanyCurrency"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis2"/>
+								</Record>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="Quantity"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.Chart" Qualifier="donut">
+					<Record Type="UI.ChartDefinitionType">
+						<PropertyValue Property="Title" String="{@i18n>@RevenueBySupplierChartTitle}"/>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Donut"/>
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>Supplier</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="DimensionAttributes">
+							<Collection>
+								<Record Type="UI.ChartDimensionAttributeType">
+									<PropertyValue Property="Dimension" PropertyPath="Supplier"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Category"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>GrossAmountInCompanyCurrency</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="GrossAmountInCompanyCurrency"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#GrossAmountInCompanyCurrency"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.PresentationVariant" Qualifier="bubble">
+					<Record>
+						<PropertyValue Property="MaxItems" Int="4"/>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="Quantity"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="IncludeGrandTotal" Bool="true"/>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@UI.Chart#bubble</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.PresentationVariant" Qualifier="donut">
+					<Record>
+						<PropertyValue Property="MaxItems" Int="3"/>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="GrossAmountInCompanyCurrency"/>
+									<PropertyValue Property="Descending" Bool="true"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="IncludeGrandTotal" Bool="true"/>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@UI.DataPoint#GrossAmountInCompanyCurrency</AnnotationPath>
+								<AnnotationPath>@UI.Chart#donut</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- ==============================================================================================
+				Sales History
+				
+				Cards: 'Total Revenue' (Line Chart)
+			=============================================================================================== -->
+			<Annotations Target="SEPMRA_OVW.SEPMRA_C_OVW_SalesHistoryType">
+				<Annotation Term="UI.Chart" Qualifier="line">
+					<Record Type="UI.ChartDefinitionType">
+						<PropertyValue Property="Title" String="{@i18n>@RevenuePerMonthChartTitle}"/>
+						<PropertyValue Property="ChartType" EnumMember="UI.ChartType/Line"/>
+						<PropertyValue Property="Dimensions">
+							<Collection>
+								<PropertyPath>CreationMonth</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="DimensionAttributes">
+							<Collection>
+								<Record Type="UI.ChartDimensionAttributeType">
+									<PropertyValue Property="Dimension" PropertyPath="CreationMonth"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Category"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Measures">
+							<Collection>
+								<PropertyPath>GrossAmountInCompanyCurrency</PropertyPath>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="MeasureAttributes">
+							<Collection>
+								<Record Type="UI.ChartMeasureAttributeType">
+									<PropertyValue Property="Measure" PropertyPath="GrossAmountInCompanyCurrency"/>
+									<PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+									<PropertyValue Property="DataPoint" AnnotationPath="@UI.DataPoint#GrossAmountInCompanyCurrency"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.DataPoint" Qualifier="GrossAmountInCompanyCurrency">
+					<Record>
+						<PropertyValue Property="Value" Path="GrossAmountInCompanyCurrency"/>
+						<PropertyValue Property="Title" String="{@i18n>@RevenueLabel}"/>
+						<PropertyValue Property="CriticalityCalculation">
+							<Record>
+								<PropertyValue Property="ImprovementDirection" EnumMember="UI.ImprovementDirectionType/Maximize"/>
+								<PropertyValue Property="DeviationRangeLowValue" Decimal="1000000"/>
+								<PropertyValue Property="ToleranceRangeLowValue" Decimal="3000000"/>
+							</Record>
+						</PropertyValue>
+						<PropertyValue Property="TrendCalculation">
+							<Record>
+								<PropertyValue Property="ReferenceValue" Path="ReferenceAmount"/>
+								<PropertyValue Property="IsRelativeDifference" Bool="false"/>
+								<PropertyValue Property="UpDifference" Decimal="10"/>
+								<PropertyValue Property="StrongUpDifference" Decimal="100"/>
+								<PropertyValue Property="DownDifference" Decimal="-10"/>
+								<PropertyValue Property="StrongDownDifference" Decimal="-100"/>
+							</Record>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.PresentationVariant" Qualifier="line">
+					<Record>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="CreationMonthAsDate"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@UI.Chart#line</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant">
+					<Record>
+						<PropertyValue Property="PresentationVariant" Path="@UI.PresentationVariant#line"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- ==============================================================================================
+				Sales Order
+				
+				Cards: 'New Sales Orders'
+			=============================================================================================== -->
+			<Annotations Target="SEPMRA_OVW.SEPMRA_C_OVW_SalesOrderType">
+				<Annotation Term="UI.DataPoint" Qualifier="RevenueInLocalCurrency">
+					<Record>
+						<PropertyValue Property="Value" Path="RevenueInLocalCurrency"/>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="{@i18n>@CustomerLabel}"/>
+							<PropertyValue Property="Value" Path="CompanyName"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Label" String="{@i18n>@GrossAmountLabel}"/>
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#RevenueInLocalCurrency"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Label" String="{@i18n>@SalesOrderLabel}"/>
+							<PropertyValue Property="Value" Path="ActiveSalesOrder"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.PresentationVariant" Qualifier="Default">
+					<Record>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="CreationDateTime"/>
+									<PropertyValue Property="Descending" Bool="true"/>
+								</Record>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="ActiveSalesOrder"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@UI.LineItem</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant">
+					<Record>
+						<PropertyValue Property="PresentationVariant" Path="@UI.PresentationVariant#Default"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- ==============================================================================================
+				Employees
+				
+				Cards: 'Recent Contacts'
+			=============================================================================================== -->
+			<Annotations Target="SEPMRA_OVW.SEPMRA_C_OVW_EmployeesType/EmployeePictureURL">
+				<Annotation Term="UI.IsImageURL"/>
+			</Annotations>
+			<Annotations Target="SEPMRA_OVW.SEPMRA_C_OVW_EmployeesType">
+				<Annotation Term="UI.PresentationVariant" Qualifier="Default">
+					<Record>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="LastName"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@UI.LineItem</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant">
+					<Record>
+						<PropertyValue Property="PresentationVariant" Path="@UI.PresentationVariant#Default"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<!-- ==============================================================================================
+				Recent Sales
+				
+				Cards: 'Top-Selling Products'
+			=============================================================================================== -->
+			<Annotations Target="SEPMRA_OVW.SEPMRA_C_OVW_RecentSalesType">
+				<Annotation Term="UI.LineItem">
+					<Collection>
+						<Record Type="UI.DataField">
+							<PropertyValue Property="Value" Path="Product_Text"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+						</Record>
+						<Record Type="UI.DataFieldForAnnotation">
+							<PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#TotalQuantity"/>
+							<Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+						</Record>
+					</Collection>
+				</Annotation>
+				<Annotation Term="UI.PresentationVariant" Qualifier="Default">
+					<Record>
+						<PropertyValue Property="SortOrder">
+							<Collection>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="TotalQuantity"/>
+									<PropertyValue Property="Descending" Bool="true"/>
+								</Record>
+								<Record Type="Common.SortOrderType">
+									<PropertyValue Property="Property" PropertyPath="Product"/>
+									<PropertyValue Property="Descending" Bool="false"/>
+								</Record>
+							</Collection>
+						</PropertyValue>
+						<PropertyValue Property="Visualizations">
+							<Collection>
+								<AnnotationPath>@UI.LineItem</AnnotationPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="UI.SelectionPresentationVariant">
+					<Record>
+						<PropertyValue Property="PresentationVariant" Path="@UI.PresentationVariant#Default"/>
+					</Record>
+				</Annotation>
+			</Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

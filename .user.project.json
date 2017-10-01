@@ -1,0 +1,22 @@
+{
+  "run": [
+    {
+      "filePath": "/sample.ProcurementOverview/webapp/test/testOVPwithMock.html",
+      "previewMode": 0,
+      "dataMode": 1,
+      "workspace": "withoutWorkspace",
+      "ui5ActiveVersion": null,
+      "ui5VerSource": null,
+      "isDefaultVersion": 0,
+      "urlParameters": [],
+      "hashParameter": "",
+      "backendSystem": [],
+      "_metadata": {
+        "id": 9750436,
+        "runnerId": "webapprunner",
+        "displayName": "Run testOVPwithMock.html",
+        "lastRunTimeStamp": 1506835448607
+      }
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+	"_version": "1.5.0",
+	"start_url": "start.html",
+	"sap.app": {
+		"id": "nw.epm.refapps.st.overview",
+		"type": "application",
+		"resources": "resources.json",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.2.2"
+		},
+		"title": "{{app_title}}",
+		"subTitle": "{{app_description}}",
+		"description": "{{app_title}}",
+		"ach": "BC-SRV-NWD-FRA",
+		"dataSources": {
+			"SEPMRA_OVW": {
+				"uri": "/sap/opu/odata/sap/SEPMRA_OVW/",
+				"type": "OData",
+				"settings": {
+					"annotations": [
+						"mainAnnotations",
+						"annotations"
+					],
+					"localUri": "localService/mockdata/metadata.xml"
+				}
+			},
+			"mainAnnotations": {
+				"uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='SEPMRA_OVW_ANNO_MDL',Version='0001')/$value/",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "localService/SEPMRA_OVW_ANNO_MDL.xml"
+				}
+			},
+			"annotations": {
+				"uri": "annotations/annotations.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "annotations/annotations.xml"
+				}
+			}
+		},
+		"sourceTemplate": {
+			"id": "OVP.smartovptemplate",
+			"version": "1.41.1"
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "sap-icon://Fiori2/F0250",
+			"favIcon": "icon/F0250_Manage_Uncovered_Sales_Order.ico"
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"dependencies": {
+			"minUI5Version": "1.44.17",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.ovp": {
+					"minVersion": "1.44.0"
+				}
+			}
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"@i18n": {
+				"preload": true,
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties"
+			},
+			"SEPMRA_OVW": {
+				"dataSource": "SEPMRA_OVW",
+				"settings": {
+					"defaultCountMode": "Inline"
+				}
+			}
+		},
+		"extends": {
+			"extensions": {}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		}
+	},
+	"sap.ovp": {
+		"globalFilterModel": "SEPMRA_OVW",
+		"globalFilterEntityType": "",
+		"cards": {
+			"card01_TopSellingProducts": {
+				"model": "SEPMRA_OVW",
+				"template": "sap.ovp.cards.list",
+				"settings": {
+					"entitySet": "SEPMRA_C_OVW_RecentSales",
+					"title": "{{topSellingProductsTitle}}",
+					"subTitle": "{{thisMonth}}",
+					"category": "{{manageProducts}}",
+					"listFlavor": "bar",
+					"listType": "condensed",
+					"presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#Default"
+				}
+			},
+			"card02_Top4SuppliersChart": {
+				"model": "SEPMRA_OVW",
+				"template": "sap.ovp.cards.charts.analytical",
+				"settings": {
+					"entitySet": "SEPMRA_C_OVW_SalesPerSupplier",
+					"title": "{{top4SuppliersTitle}}",
+					"subTitle": "{{top4SuppliersDescription}}",
+					"presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#donut",
+					"chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#donut",
+					"dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#GrossAmountInCompanyCurrency"
+				}
+			},
+			"card03_RevenueBySupplierChart": {
+				"model": "SEPMRA_OVW",
+				"template": "sap.ovp.cards.charts.bubble",
+				"settings": {
+					"title": "{{revenueBySupplierTitle}}",
+					"subTitle": "{{revenueBySupplierDescription}}",
+					"presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#bubble",
+					"chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#bubble",
+					"dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#GrossAmountInCompanyCurrency",
+					"entitySet": "SEPMRA_C_OVW_SalesPerSupplier"
+				}
+			},
+			"card04_OverallRevenueChart": {
+				"model": "SEPMRA_OVW",
+				"template": "sap.ovp.cards.charts.line",
+				"settings": {
+					"title": "{{overallRevenueTitle}}",
+					"subTitle": "{{last4Month}}",
+					"selectionAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionVariant#line",
+					"chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart#line",
+					"presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#line",
+					"dataPointAnnotationPath": "com.sap.vocabularies.UI.v1.DataPoint#GrossAmountInCompanyCurrency",
+					"entitySet": "SEPMRA_C_OVW_SalesHistory"
+				}
+			},
+			"card05_NewSalesOrders": {
+				"model": "SEPMRA_OVW",
+				"template": "sap.ovp.cards.table",
+				"settings": {
+					"entitySet": "SEPMRA_C_OVW_SalesOrder",
+					"title": "{{newSalesOrdersTitle}}",
+					"subTitle": "{{today}}",
+					"category": "{{salesOrders}}",
+					"listFlavor": "standard",
+					"listType": "extended",
+					"presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#Default"
+				}
+			},			
+			"card06_PurchaseOrdersToApprove": {
+				"model": "SEPMRA_OVW",
+				"template": "sap.ovp.cards.stack",
+				"settings": {
+					"entitySet": "SEPMRA_C_OVW_POApprove",
+					"title": "{{purchaseOrdersToApproveTitle}}",
+					"category": "{{approvePO}}",
+					"presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#Default"
+				}
+			},
+			"card07_related_apps": {
+				"template": "sap.ovp.cards.linklist",
+				"settings": {
+					"title": "{{card30_title}}",
+					"listFlavor": "standard",
+					"staticContent": [{
+						"title": "{{card30_title_prod_man}}",
+						"imageUri": "sap-icon://Fiori6/F0865",
+						"imageAltText": "{{card30_icon_prod_man}}",
+						"semanticObject": "EPMProduct",
+						"action": "manage_st"
+					}, {
+						"title": "{{card30_title_so_man}}",
+						"imageUri": "sap-icon://Fiori2/F0246",
+						"imageAltText": "{{card30_icon_so_man}}",
+						"semanticObject": "EPMSalesOrder"
+					}]
+				}
+			}
+		}
+	},
+	"sap.platform.hcp": {
+		"uri": ""
+	},
+	"sap.fiori": {
+		"registrationIds": [
+			"F1809"
+		],
+		"archeType": "transactional"
+	}
+}
